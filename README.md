@@ -1,1 +1,1 @@
-# sudoku_resoolver
+# sudoku_resolver
