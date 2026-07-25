@@ -1,0 +1,21 @@
+{
+  "tasks": [
+    {
+      "type": "cppbuild",
+      "label": "C/C++: g++ build active file",
+      "command": "/usr/bin/g++",
+      "args": [
+        "-fdiagnostics-color=always",
+        "-g",
+        "-std=c++17",                    // Ensure C++17 for std::optional
+        "${workspaceFolder}/*.cpp",      // <-- CHANGE THIS LINE to compile all .cpp files
+        "-o",
+        "${fileDirname}/${fileBasenameNoExtension}"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ],
+"version": "2.0.0",
