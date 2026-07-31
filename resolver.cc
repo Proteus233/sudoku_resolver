@@ -19,7 +19,11 @@ Resolver::Resolver(std::vector<std::vector<std::optional<int>>>& start_sudoku) {
   }
   clear(aux_mat);
   clear(aux_mat);
-  solve_sudoku(aux_mat);
+  if (solve_sudoku(aux_mat)){
+    //the sudooku is solved
+  }else{
+    //the sudoku const be solverd
+  }
   print_matrix(aux_mat);
   Pos min = min_pos_possib(aux_mat);
   std::cout << "min possibilities at y:" << min.y << " x:" << min.x
@@ -117,19 +121,49 @@ bool Resolver::solved(Matrix& mat) {
   return true;
 }
 
-void Resolver::solve_sudoku(Matrix& mat) {
-  // cas base: esta solucionat: retorna
-  if (solved(mat)) {
-    return;
-  }
-  // cas base, es incompatible
 
-  Pos min_pos = min_pos_possib(mat);
-  auto poss = mat[min_pos.y][min_pos.x];
+bool Resolver::correct(Matrix& mat){
+  return true;
+}
+
+bool Resolver::solve_sudoku(Matrix& mat) {
+  auto aux_mat = mat;
+  clear(aux_mat);
+
+  // cas base, es incompatible
+    if (incompatible(aux_mat)){
+    return false;
+  }
+
+  // cas base: esta solucionat: retorna la matriu solucionada
+  if (solved(aux_mat)) {
+    mat = aux_mat;
+    return true;
+  }
+
+  //if we are here at least one set has multiple options
+  Pos min_pos = min_pos_possib(aux_mat);
+  auto poss = aux_mat[min_pos.y][min_pos.x];
   for (auto p : poss) {
     //std::cout << p << " ";
-    Matrix aux_mat = mat;
+
     aux_mat[min_pos.y][min_pos.x] = {p};
-    solve_sudoku(aux_mat);
+
+    if (solve_sudoku(aux_mat)){
+      mat = aux_mat;
+      return true; //the sudoku is completed
+    }
+    else{
+      if (poss.size() == 1){
+        //the only option left in the set is not compatible
+        return false;
+      }
+      poss.erase(p); //caution, might leave an empty set
+      aux_mat[min_pos.y][min_pos.x] = poss;
+
+    }
   }
+  return false;
+  //if we are here there are no possibilities possible
+  //there si an edge case if neither of the possibilities are poissible
 }
